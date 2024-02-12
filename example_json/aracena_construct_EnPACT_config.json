@@ -1,0 +1,22 @@
+{
+    "general_parameters": {
+        "project_directory": "",
+        "context": ""
+    },
+    "generate_enpact_training_data": {
+        "input_files":{
+            "gene_annotations":"",
+            "normalized_expression_data":"",
+        },
+        "chromosomes_for_training":{
+            "train":"chr1,chr2,chr3,chr4,chr5,chr6,chr9,chr10,chr11,chr16,chr17,chr18,chr19,chr20,chr21",
+            "validation": "chr7,chr15,chrX,chr12",
+            "test": "chr14,chr8,chr22,chr13"
+        },
+        "reference_epigenome": {
+            "reference_epigenome_path":"",
+            "num_bins":4,
+            "tracks":-1
+        }
+    }
+}
