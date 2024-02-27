@@ -44,6 +44,7 @@ intermediates_dir_train_enpact = os.path.join(project_dir, "intermediates",
 intermediates_dir = os.path.join(project_dir, "intermediates",
                         "linearization")
 os.makedirs(intermediates_dir, exist_ok=True)
+os.makedirs(os.path.join(intermediates_dir,"GEUVADIS_predictions_mean"), exist_ok=True)
 
 context = parameters["general_parameters"]["context"]
 
@@ -56,5 +57,30 @@ linearization_parameters = parameters["linearization_parameters"]
 
 if linearization_parameters["linearization_dataset"] == "GEUVADIS":
 
-    with open("/beagle3/haky/users/saideep/github_repos/Daily-Blog-Sai/posts/2023-11-16-linearization/individuals.txt", "r") as inds_f:
+    with open(linearization_parameters["individuals"], "r") as inds_f:
         inds = inds_f.read().split()
+
+enformer_geuvadis_pred_folder = linearization_parameters["epigenome_pred_dir"]
+
+with h5py.File(os.path.join(enformer_geuvadis_pred_folder, inds[0]+".h5"), "r") as f:
+    genes_dsets = list(f.keys())
+    genes_dsets.sort()
+
+for ind in inds:
+    if os.path.exists(os.path.join(intermediates_dir,"GEUVADIS_predictions_mean",ind+".txt")):
+        continue
+    expression_array = np.zeros((len(genes_dsets),5313))
+    if os.path.exists(os.path.join(enformer_geuvadis_pred_folder, ind+".h5")):
+        with h5py.File(os.path.join(enformer_geuvadis_pred_folder, ind+".h5"), "r") as f:
+            for i, gene in enumerate(genes_dsets):
+                # print(i)
+                # print(np.mean(f[gene][:,:],axis=0).shape)
+                expression_array[i,:] = np.mean(f[gene][:,:],axis=0)
+            np.savetxt(os.path.join("/beagle3/haky/users/saideep/projects/aracena_modeling/linearization",ind+".txt"),expression_array)
+    else:
+        print(ind)
+
+
+#################################################################
+# 2.)  Predict for linearization
+#################################################################
