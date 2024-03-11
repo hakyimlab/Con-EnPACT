@@ -186,3 +186,5 @@ ggplot(corrs_df_for_subsets) +
   scale_fill_manual(values = unlist(color_palette[["enpact_training_evaluation"]]))+ 
   theme_minimal(base_size=15)
 dev.off()
+
+write.table(corrs_df_for_subsets, file = glue("{out_folder}/corrs_df_for_subsets.tsv"), sep = "\t", quote = FALSE, row.names = FALSE)

@@ -46,15 +46,14 @@ context = parameters["general_parameters"]["context"]
 
 training_parameters = parameters["train_enpact"]
 
+script_directory = os.path.dirname(os.path.abspath(sys.argv[0])) 
+print(script_directory)
 
 #################################################################
 # 1.) Run training script
 #################################################################
 
 print("Running training script")
-
-script_directory = os.path.dirname(os.path.abspath(sys.argv[0])) 
-print(script_directory)
 
 if training_parameters["model_type"] == "elastic_net":
     training_script = os.path.join(script_directory,"train_EnPACT_elastic_net.R")

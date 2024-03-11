@@ -54,7 +54,7 @@ epigenome_parameters = parameters["generate_enpact_training_data"]["reference_ep
 print("Establishing common genes between expression and annotations")
 
 gene_annotations = pd.read_csv(input_files["gene_annotations"], index_col=0)
-normalized_expression_data = pd.read_csv(input_files["normalized_expression_data"], sep=",", index_col=0)
+normalized_expression_data = pd.read_csv(input_files["normalized_expression_data"], sep="\t", index_col=0)
 
 common_genes = list(set(gene_annotations.index).intersection(set(normalized_expression_data.index)))
 with open(os.path.join(project_dir, "intermediates",
