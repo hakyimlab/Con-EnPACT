@@ -32,5 +32,6 @@ Doing this is not trivial. Here we implement a tractable method of converting th
 
 ## To-do
 
-Store only a single copy of Enformer personalized predictions to reduce memory overhead.
-Option to delete personalized EnPACT predictions after contruction of linearized models.
+- [] Store only a single copy of Enformer personalized predictions to reduce memory overhead.
+- [] Option to delete personalized EnPACT predictions after contruction of linearized models.
+
