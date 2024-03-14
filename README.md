@@ -19,3 +19,6 @@ As disease
 
 
 
+## To-do
+
+Option to delete personalized EnPACT predictions after contruction of linearized models.
