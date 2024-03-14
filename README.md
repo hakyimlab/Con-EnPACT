@@ -11,9 +11,20 @@ Pretty simple. In practice, the "En" in "EnPACT" refers to "Enformer", the seque
 
 ## Using EnPACT to explore genetic causes of disease
 
-As disease 
+Because molecular phenotypes must be related to the genetically controlled components of disease (central dogma), genetic predictors of molecular phenotype can be useful tools in providing genetic insights. Integrative analyses used to make these insights are plenty. Currently, the following integrative analyses are supported in this repository:
 
-###
+1. TWAS (SPrediXcan)
+
+### TWAS with EnPACT
+
+EnPACT models try to learn which elements of underlying DNA sequence are predictive of variation in the molecular phenotype of interest. This is similar to existing models used in TWAS analysis relating GWAS loci to molecular loci. The major difference is that existing TWAS models are trained to predict the variation of features (such as individual genes) across individuals in a population, while EnPACT models try to use variation across similar features in the genome (different genes) during training. Both training approaches have theoretical pros and cons, but a nice possibility is to be able to also perform TWAS analysis with EnPACT style models. 
+
+Doing this is not trivial. Here we implement a tractable method of converting the EnPACT model, which does not annotate individual SNP variant effects, into a form a compatible with the TWAS software SPrediXcan. The process is called **linearization** and involves the contruction of elastic models for each molecular feature in the linearization dataset. The models predict variation in each individual molecular feature across individuals in the linearization dataset. Rather than predicting observed expression in these individuals, as is the case in existing TWAS models, the linearization models predict _personalized_ EnPACT predictions generated from each individuals unique DNA sequence for that molecular feature. In other words, these models approximate the EnPACT personalized predictions in a TWAS-compatible way.
+
+
+
+
+
 
 
 
