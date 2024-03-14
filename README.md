@@ -21,4 +21,5 @@ As disease
 
 ## To-do
 
+Store only a single copy of Enformer personalized predictions to reduce memory overhead.
 Option to delete personalized EnPACT predictions after contruction of linearized models.
