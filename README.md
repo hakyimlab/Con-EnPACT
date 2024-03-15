@@ -16,7 +16,10 @@ The steps to train an EnPACT model are labeled in the following figure:
 
 Scripts for each step are included in the "/scripts/" directory. For example, step 1.1 corresponds to "/scripts/1.1_generate_enpact_training_data.py".
 
-All inputs are controlled 
+### Configuration
+
+Inputs for all steps are specified in a json style config file. An example can be found in [Example configuration with TWAS](example_json/example_config_with_twas.json). 
+
 
 # Using EnPACT to explore genetic causes of disease
 
@@ -44,6 +47,7 @@ Doing this is not trivial. Here we implement a tractable method of converting th
 
 ## To-do
 
+- [] Better synchronize names of steps with steps in config file
 - [] Store only a single copy of Enformer personalized predictions to reduce memory overhead.
 - [] Option to delete personalized EnPACT predictions after contruction of linearized models.
 
