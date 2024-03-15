@@ -12,7 +12,7 @@ Pretty simple. In practice, the "En" in "EnPACT" refers to "Enformer", the seque
 
 The steps to train an EnPACT model are labaled in the following figure:
 
-!(docs/enpact_model-EnPACT_steps.drawio.png)
+![Train EnPACT steps](docs/enpact_model-EnPACT_steps.drawio.png)
 
 Scripts for each step are included in the "/scripts/" directory. For example, step 1.1 corresponds to "/scripts/1.1_generate_enpact_training_data.py".
 
