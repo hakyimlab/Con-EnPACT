@@ -10,7 +10,7 @@ Pretty simple. In practice, the "En" in "EnPACT" refers to "Enformer", the seque
 
 ## Training an EnPACT model
 
-The steps to train an EnPACT model are labaled in the following figure:
+The steps to train an EnPACT model are labeled in the following figure:
 
 ![Train EnPACT steps](docs/enpact_model-EnPACT_steps.drawio.png)
 
