@@ -98,9 +98,9 @@ for ind in inds:
     print(ind)
     args.append((ind, intermediates_dir, epigenome_pred_folder, genes_dsets, num_bins, num_tracks))
 cpu_count = mp.cpu_count()
-# with mp.Pool(cpu_count) as pool:
-#     print(cpu_count)
-#     pool.starmap(create_inputs_for_ind, args)
+with mp.Pool(cpu_count) as pool:
+    print(cpu_count)
+    pool.starmap(create_inputs_for_ind, args)
 
 
 #################################################################
@@ -132,8 +132,8 @@ model_path = os.path.join(intermediates_dir_train_enpact,
 args = []
 for ind in inds: 
     args.append((ind, intermediates_dir, model_path))
-# with mp.Pool(processes=mp.cpu_count()) as pool:
-#     pool.starmap(make_personalized_enpact_predictions, args)
+with mp.Pool(processes=mp.cpu_count()) as pool:
+    pool.starmap(make_personalized_enpact_predictions, args)
 
 
 #################################################################
@@ -234,3 +234,8 @@ with open(os.path.join(script_directory,"run_predictDB.sbatch"), "r") as f:
     os.makedirs(os.path.join(intermediates_dir, "predictDB"), exist_ok=True)
     with open(os.path.join(intermediates_dir, "predictDB","run_predictDB.sbatch"), "w") as rp:
         rp.write(predictDB_script)
+
+
+
+    subprocess.run(["sbatch", os.path.join(intermediates_dir, "predictDB","run_predictDB.sbatch")],
+                   cwd= os.path.join(intermediates_dir, "predictDB"))

@@ -69,5 +69,7 @@ if twas_parameters["TWAS_method"] == "SPrediXcan":
         with open(os.path.join(intermediates_dir, gwas, gwas+".sbatch"), "w") as o:
             o.write(twas_template)
 
+        subprocess.run(["sbatch", os.path.join(intermediates_dir, gwas, gwas+".sbatch")],
+                       cwd=os.path.join(intermediates_dir, gwas))
 
 

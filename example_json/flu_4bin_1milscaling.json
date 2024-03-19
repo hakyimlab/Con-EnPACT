@@ -40,7 +40,8 @@
         "TWAS_method": "SPrediXcan",
         "path_to_TWAS_software": "/beagle3/haky/users/saideep/github_repos/MetaXcan/software/SPrediXcan.py",
         "GWAS_data": {
-            "Allergy_Eczema":"/beagle3/haky/users/saideep/projects/aracena_modeling/SPrediXcan/sumstats_formatted/Asthma_eczema_farreira_FORMATTED.txt.chromb38"
+            "Allergy_Eczema":"/beagle3/haky/users/saideep/projects/aracena_modeling/SPrediXcan/sumstats_formatted/Asthma_eczema_farreira_FORMATTED.txt.chromb38",
+            "T2D":"/beagle3/haky/users/charles/project/singleXcanDL/S_PrediXcan/T2D_GWAS_process/T2D_harmonized.txt.gz"
             
         }
     }

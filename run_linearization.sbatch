@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=EnPACT_training_JOBNAME
+#SBATCH --job-name=EnPACT_linearization_JOBNAME
 #SBATCH --account=pi-haky
 #SBATCH --partition=caslake
 #SBATCH --nodes=1
