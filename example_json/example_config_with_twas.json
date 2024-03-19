@@ -1,0 +1,47 @@
+{
+    "general_parameters": {
+        "project_directory": "/beagle3/haky/users/saideep/projects/Con_EnPACT/models/flu_4bin_1milscaling",
+        "context": "Flu",
+        "color_palette": "/beagle3/haky/users/saideep/github_repos/Con-EnPACT/color_palettes/color_palette.json"
+    },
+    "generate_enpact_training_data": {
+        "input_files":{
+            "gene_annotations":"/beagle3/haky/users/saideep/github_repos/Daily-Blog-Sai/posts/2023-09-20-diagnose_training_tracks_issue/canonical_TSS_full_metadata.txt",
+            "normalized_expression_data":"/beagle3/haky/users/saideep/projects/aracena_modeling/Inputs/counts_matrices/fully_preprocessed_expression_3_7_1milscale_Flu.txt"
+        },
+        "chromosomes_for_training":{
+            "train":"chr1,chr2,chr3,chr4,chr5,chr6,chr9,chr10,chr11,chr16,chr17,chr18,chr19,chr20,chr21",
+            "validation": "chr7,chr15,chrX,chr12",
+            "test": "chr14,chr8,chr22,chr13"
+        },
+        "reference_epigenome": {
+            "reference_epigenome_path":"/project2/haky/Data/enformer-reference-epigenome",
+            "num_bins":4,
+            "tracks": -1,
+            "num_tracks":5313
+        }
+    },
+    "train_enpact":{
+        "model_type":"elastic_net",
+        "evaluation_parameters": {
+            "epigenome_reference_track":4766
+        }
+    },
+    "linearization":{
+        "path_to_predictDB_pipeline": "/beagle3/haky/users/saideep/github_repos/forked_PredictDB-nextflow/PredictDb-nextflow",
+        "linearization_dataset": "GEUVADIS",
+        "epigenome_pred_dir": "/beagle3/haky/data/Geuvadis_TSS_enformer_prediction",
+        "individuals": "/beagle3/haky/users/saideep/github_repos/Daily-Blog-Sai/posts/2023-11-16-linearization/individuals.txt",
+        "gene_annotation": "/beagle3/haky/users/charles/project/singleXcanDL/PredicDB/LCL_PredictDb/files/Gene_anno.txt",
+        "snp_annotation": "/beagle3/haky/users/charles/project/singleXcanDL/PredicDB/T2D_all_DL_PredictDb/meta_data/all_chrs.snp_annot_v1.txt",
+        "genotype_data": "/beagle3/haky/users/charles/project/singleXcanDL/PredicDB/T2D_all_DL_PredictDb/meta_data/all_chrs.geno_v1.txt"
+    },
+    "TWAS":{
+        "TWAS_method": "SPrediXcan",
+        "path_to_TWAS_software": "/beagle3/haky/users/saideep/github_repos/MetaXcan/software/SPrediXcan.py",
+        "GWAS_data": {
+            "Allergy_Eczema":"/beagle3/haky/users/saideep/projects/aracena_modeling/SPrediXcan/sumstats_formatted/Asthma_eczema_farreira_FORMATTED.txt.chromb38"
+            
+        }
+    }
+}
