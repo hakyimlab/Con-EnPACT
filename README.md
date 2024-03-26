@@ -56,4 +56,5 @@ The workflow including TWAS is as follows:
 - [] Better synchronize names of steps with steps in config file
 - [] Store only a single copy of Enformer personalized predictions to reduce memory overhead.
 - [] Option to delete personalized EnPACT predictions after contruction of linearized models.
+- [] Remove expression specificity
 
