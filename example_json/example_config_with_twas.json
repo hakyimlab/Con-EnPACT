@@ -27,12 +27,32 @@
             "epigenome_reference_track":4766
         }
     },
+    "predictDB_standard": {
+        "path_to_predictDB_pipeline": "/beagle3/haky/users/saideep/github_repos/forked_PredictDB-nextflow/PredictDb-nextflow",
+        "genotype_file":"/beagle3/haky/users/saideep/projects/aracena_modeling/Inputs/QTL_mapping/SNP_genotypes_b37.txt",
+        "snp_annotation_file":"/beagle3/haky/users/saideep/projects/aracena_modeling/Inputs/ref/rsIDs.for.predixcan_b37.txt",
+        "feature_annotation_file":"/beagle3/haky/users/saideep/projects/aracena_modeling/Inputs/ref/gencode.v44lift37.annotation.gtf.parsed.txt",
+        "nfolds":3
+    },
+    "personalized_predictions": {
+        "path_to_epigenome_prediction_pipeline": "/beagle3/haky/users/saideep/github_repos/shared_pipelines/enformer_pipeline/",
+        "path_to_epigenome_config":"",
+        "epigenome_config_parameters": {
+            "model_path": "/project2/haky/Data/enformer/raw",
+            "fasta_file":"/beagle3/haky/users/saideep/projects/aracena_modeling/Inputs/ref/hg19.fa",
+            "tracks_to_save": -1,
+            "bins_to_save": -1
+        },
+        "path_to_vcf":"",
+        "num_bins":4,
+        "max_features": 1000
+
+    },
     "linearization":{
         "path_to_predictDB_pipeline": "/beagle3/haky/users/saideep/github_repos/forked_PredictDB-nextflow/PredictDb-nextflow",
         "linearization_dataset": "GEUVADIS",
         "epigenome_pred_dir": "/beagle3/haky/data/Geuvadis_TSS_enformer_prediction",
         "individuals": "/beagle3/haky/users/saideep/github_repos/Daily-Blog-Sai/posts/2023-11-16-linearization/individuals.txt",
-        "gene_annotation": "/beagle3/haky/users/charles/project/singleXcanDL/PredicDB/LCL_PredictDb/files/Gene_anno.txt",
         "snp_annotation": "/beagle3/haky/users/charles/project/singleXcanDL/PredicDB/T2D_all_DL_PredictDb/meta_data/all_chrs.snp_annot_v1.txt",
         "genotype_data": "/beagle3/haky/users/charles/project/singleXcanDL/PredicDB/T2D_all_DL_PredictDb/meta_data/all_chrs.geno_v1.txt"
     },

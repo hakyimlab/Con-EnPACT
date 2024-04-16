@@ -30,6 +30,7 @@ if(file.exists(opt$train_data_file_X)){
 } else {
     stop(glue('ERROR - Training data cannot be found.'))
 }
+
 if(file.exists(opt$train_data_file_y)){
     print(glue('INFO - Reading train data y...'))
     y_train <- as.matrix(read.table(opt$train_data_file_y, row.names=1, sep='\t', header=F))
@@ -38,9 +39,25 @@ if(file.exists(opt$train_data_file_y)){
     stop(glue('ERROR - Training data cannot be found.'))
 }
 
+
 print(glue('INFO - Training data X has {dim(X_train)[1]} rows and {dim(X_train)[2]} columns'))
 print(glue('INFO - Training data y has {dim(y_train)[1]} rows and {dim(y_train)[2]} columns'))
 
+# Filter NA rows 
+
+na_rows_X <- !complete.cases(X_train)
+na_rows_y <- !complete.cases(y_train)
+
+not_na_rows <- !(na_rows_X | na_rows_y)
+
+
+print(glue('INFO - Removing {length(not_na_rows)} rows with NA values'))
+X_train <- X_train[not_na_rows,]
+y_train <- y_train[not_na_rows]
+
+
+print(glue('INFO - Training data X has {dim(X_train)[1]} rows and {dim(X_train)[2]} columns'))
+print(glue('INFO - Training data y has {dim(y_train)[1]} rows and {dim(y_train)[2]} columns'))
 
 cl <- 12 #parallel::makeCluster(5)
 print(glue('INFO - Found {parallel::detectCores()} cores but using {cl}'))

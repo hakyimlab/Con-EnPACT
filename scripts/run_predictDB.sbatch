@@ -21,6 +21,7 @@ nextflow run PREDICTDB_REPO/main.nf \
 --genotype GENOTYPE \
 --gene_exp EXPRESSION \
 --outdir OUTPUT_DIR \
+--nfolds NFOLDS \
 --keepIntermediate \
 -resume \
 -profile midway3

@@ -87,7 +87,7 @@ training_gene_metadata_file = os.path.join(intermediates_dir,"training_gene_meta
 with open(training_gene_metadata_file, "w") as region_file:
     for gene in common_genes:
 
-        gene_chr = "chr"+gene_annotations[gene_annotations.index == gene]["chromosome_name"].values[0]
+        gene_chr = "chr"+str(gene_annotations[gene_annotations.index == gene]["chromosome_name"].values[0])
         if gene_chr in ["chrX","chrY","chrM"]:
             continue
         if gene_chr in gene_mapping["valid"]:
