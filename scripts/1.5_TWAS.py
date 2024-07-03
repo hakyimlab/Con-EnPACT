@@ -11,6 +11,8 @@ import os,sys
 # 0.) Load required input variables, and create directories
 #################################################################
 
+
+
 print("Loading input variables")
 
 json_file = sys.argv[1]
