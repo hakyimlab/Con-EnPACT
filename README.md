@@ -8,6 +8,10 @@ EnPACT is a modeling strategy which fine tunes DNA sequence-based molecular pred
 
 Pretty simple. In practice, the "En" in "EnPACT" refers to "Enformer", the sequence-based predictor explored here. However, there is no reason that this should be the **only** model which can fulfill this role, so this code is intentionally modular to encourage exploration of other sequence-based predictors. The EnPACT model is also a flexible, but important, choice. Linear elastic net and a simple convolutional neural net are two currently implemented options, but exploration is again encouraged with modular code support. 
 
+## What is "Con-EnPACT"
+
+Con-EnPACT is just "context-specific" EnPACT. It's what I'm calling my EnPACT models which I trained on a flu-context, multiomics dataset from [this study.](https://www.nature.com/articles/s41588-024-01668-z)
+
 ## Training an EnPACT model
 
 The steps to train an EnPACT model are labeled in the following figure:
