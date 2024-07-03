@@ -20,7 +20,6 @@ Scripts for each step are included in the "/scripts/" directory. For example, st
 
 Inputs for all steps are specified in a json style config file. An example can be found in [Example configuration with TWAS](example_json/example_config_with_twas.json). 
 
-
 # Using EnPACT to explore the genetic component of diseases
 
 Because molecular phenotypes must be related to the genetically controlled components of disease (as dictated by the central dogma), genetic predictors of molecular phenotypes can help bridge the gap between underlying genetic sequence and higher level observed phenotype. Integrative analyses used to make these insights are plenty. Currently, the following integrative analyses are supported in this repository:
