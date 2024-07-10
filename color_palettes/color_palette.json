@@ -7,6 +7,12 @@
     "enpact_training_evaluation":{
         "EnPACT_pred_vs_ground_truth": "red",
         "log2_epi_ref_track_vs_ground_truth":"blue" 
+    },
+    "personalized_training_evaluation":{
+        "EnPACT": "red",
+        "PredictDB": "green",
+        "Null": "purple"
+
     }
 }
                         

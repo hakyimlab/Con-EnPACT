@@ -46,7 +46,7 @@ context = parameters["general_parameters"]["context"]
 
 training_parameters = parameters["train_enpact"]
 
-script_directory = os.path.dirname(os.path.abspath(sys.argv[0])) 
+script_directory = os.path.dirname(os.path.abspath(sys.argv[0]))
 print(script_directory)
 
 #################################################################

@@ -54,53 +54,34 @@ script_directory = os.path.dirname(os.path.abspath(sys.argv[0]))
 print(script_directory)
 
 #################################################################
-# 1.) Prepare personalized epigenome for EnPACT predictions
+# 1.) Check for features to linearize on
 #################################################################
 
-print("Preparing personalized epigenome for EnPACT predictions")
+print("Preparing features to linearize EnPACT model on")
 
-def create_inputs_for_ind(ind, intermediates_dir, epigenome_pred_folder, genes_dsets, num_bins, num_tracks):
-    print(mp.current_process(), " individual: ", ind)
-    start_time = time.time()
-    expression_array = np.zeros((len(genes_dsets),num_tracks))
-    if os.path.exists(os.path.join(intermediates_dir,"personalized_epigenome_predictions_mean_"+ind+".txt")):
-        print(ind," already exists")
-        return
-    if os.path.exists(os.path.join(epigenome_pred_folder, ind+".h5")):
-        with h5py.File(os.path.join(epigenome_pred_folder, ind+".h5"), "r") as f:
-            for i, gene in enumerate(genes_dsets):
-                expression_array_bins = f[gene].shape[0]
-                central_bin_start_ind = find_central_bin_start_ind(num_bins, expression_array_bins)
-                expression_array[i,:] = np.mean(f[gene][central_bin_start_ind:central_bin_start_ind+num_bins,:],axis=0)
-            np.savetxt(os.path.join(intermediates_dir,"personalized_epigenome_predictions_mean_"+ind+".txt"),expression_array)
-    
-    end_time = time.time()
-    print("Time taken for ", ind, " is ", end_time-start_time)
+feature_source = linearization_parameters["feature_source"]
 
-def find_central_bin_start_ind(mid_len, all_bins):
-    return ((all_bins-mid_len)//2)
+if feature_source == "gwas_sum_stats":
+
+    # If utilizing gwas sum stats to extract features, this operation only needs 
+    # to be done once per gwas. 
+    gwas_sum_stats = parameters["XWAS"][{"GWAS_sum_stats"}]
+    for sum_stat in gwas_sum_stats.keys():
+        os.makedirs(path_to_current_gwas, exist_ok=True)
+
+        path_to_current_features = os.path.join(path_to_current_gwas, "all_SNPs_susie_filt.txt")
+        if not os.path.exists(path_to_current_features):
+            epigenome_utils.extract_features_from_sum_stats(gwas_sum_stats[sum_stat],
+                                                            linearization_parameters["snp_annotation"],
+                                                            path_to_current_features)
 
 
-with open(linearization_parameters["individuals"], "r") as inds_f:
-    inds = inds_f.read().split()
 
-epigenome_pred_folder = linearization_parameters["epigenome_pred_dir"]
 
-num_tracks = parameters["generate_enpact_training_data"]["reference_epigenome"]["num_tracks"]
-num_bins = parameters["generate_enpact_training_data"]["reference_epigenome"]["num_bins"]
 
-with h5py.File(os.path.join(epigenome_pred_folder, inds[0]+".h5"), "r") as f:
-    genes_dsets = list(f.keys())
-    genes_dsets.sort()
 
-args = []
-for ind in inds:
-    print(ind)
-    args.append((ind, intermediates_dir, epigenome_pred_folder, genes_dsets, num_bins, num_tracks))
-cpu_count = mp.cpu_count()
-with mp.Pool(cpu_count) as pool:
-    print(cpu_count)
-    pool.starmap(create_inputs_for_ind, args)
+
+
 
 
 #################################################################
@@ -116,7 +97,7 @@ def make_personalized_enpact_predictions(ind, intermediates_dir, model_path):
     com = [
         "Rscript",
         "--vanilla",
-        os.path.join(script_directory,"predict_for_linearization_elastic_net.R"),
+        os.path.join(script_directory,"predict_from_epigenome.R"),
         f"--individual={ind}",
         f"--intermediates_dir={intermediates_dir}",
         f"--trained_model={model_path}"
@@ -234,8 +215,6 @@ with open(os.path.join(script_directory,"run_predictDB.sbatch"), "r") as f:
     os.makedirs(os.path.join(intermediates_dir, "predictDB"), exist_ok=True)
     with open(os.path.join(intermediates_dir, "predictDB","run_predictDB.sbatch"), "w") as rp:
         rp.write(predictDB_script)
-
-
 
     subprocess.run(["sbatch", os.path.join(intermediates_dir, "predictDB","run_predictDB.sbatch")],
                    cwd= os.path.join(intermediates_dir, "predictDB"))

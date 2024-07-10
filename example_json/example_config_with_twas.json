@@ -32,36 +32,40 @@
         "genotype_file":"/beagle3/haky/users/saideep/projects/aracena_modeling/Inputs/QTL_mapping/SNP_genotypes_b37.txt",
         "snp_annotation_file":"/beagle3/haky/users/saideep/projects/aracena_modeling/Inputs/ref/rsIDs.for.predixcan_b37.txt",
         "feature_annotation_file":"/beagle3/haky/users/saideep/projects/aracena_modeling/Inputs/ref/gencode.v44lift37.annotation.gtf.parsed.txt",
-        "nfolds":3
+        "nfolds":3,
+        "holdout_proportion": 0.33
+
     },
     "personalized_predictions": {
         "path_to_epigenome_prediction_pipeline": "/beagle3/haky/users/saideep/github_repos/shared_pipelines/enformer_pipeline/",
         "path_to_epigenome_config":"",
         "epigenome_config_parameters": {
             "model_path": "/project2/haky/Data/enformer/raw",
-            "fasta_file":"/beagle3/haky/users/saideep/projects/aracena_modeling/Inputs/ref/hg19.fa",
+            "fasta_file":"/beagle3/haky/data/hg_sequences/hg19/raw/genome.fa",
             "tracks_to_save": -1,
             "bins_to_save": -1
         },
         "path_to_vcf":"",
         "num_bins":4,
-        "max_features": 1000
+        "max_features": 1000,
+        "date": -1
 
     },
     "linearization":{
         "path_to_predictDB_pipeline": "/beagle3/haky/users/saideep/github_repos/forked_PredictDB-nextflow/PredictDb-nextflow",
-        "linearization_dataset": "GEUVADIS",
         "epigenome_pred_dir": "/beagle3/haky/data/Geuvadis_TSS_enformer_prediction",
+        "feature_source": "gwas_sum_stats",
+        "features_path":"",
         "individuals": "/beagle3/haky/users/saideep/github_repos/Daily-Blog-Sai/posts/2023-11-16-linearization/individuals.txt",
         "snp_annotation": "/beagle3/haky/users/charles/project/singleXcanDL/PredicDB/T2D_all_DL_PredictDb/meta_data/all_chrs.snp_annot_v1.txt",
         "genotype_data": "/beagle3/haky/users/charles/project/singleXcanDL/PredicDB/T2D_all_DL_PredictDb/meta_data/all_chrs.geno_v1.txt"
     },
-    "TWAS":{
-        "TWAS_method": "SPrediXcan",
-        "path_to_TWAS_software": "/beagle3/haky/users/saideep/github_repos/MetaXcan/software/SPrediXcan.py",
-        "GWAS_data": {
-            "Allergy_Eczema":"/beagle3/haky/users/saideep/projects/aracena_modeling/SPrediXcan/sumstats_formatted/Asthma_eczema_farreira_FORMATTED.txt.chromb38"
-            
+    "XWAS":{
+        "XWAS_method": "SPrediXcan",
+        "path_to_XWAS_software": "/beagle3/haky/users/saideep/github_repos/MetaXcan/software/SPrediXcan.py",
+        "GWAS_sum_stats": {
+            "Allergy_Eczema":"/beagle3/haky/users/saideep/projects/aracena_modeling/SPrediXcan/sumstats_formatted/Asthma_eczema_farreira_FORMATTED.txt.chromb38",
+            "COVID":""
         }
     }
 }

@@ -19,8 +19,8 @@ library(jsonlite)
 suppressPackageStartupMessages(library("optparse"))
 
 option_list <- list(
-    make_option("--individual", help='Directory with training data'),
-    make_option("--intermediates_dir", help='Directory with intermediate files'),
+    make_option("--input_file", help='Path to input file'),
+    make_option("--output_file", help='Path of desired output file'),
     make_option("--trained_model", help='.rds file of trained elnet')
 )
 opt <- parse_args(OptionParser(option_list=option_list))
@@ -30,27 +30,24 @@ opt <- parse_args(OptionParser(option_list=option_list))
 # 1.) Predict EnPACT prediction for given individual
 #################################################################
 
-print(glue("Predicting EnPACT predictions for individual {opt$individual}"))
-
-ind = opt$individual
-
-intermediates_dir <- opt$intermediates_dir
+print(glue("Predicting EnPACT predictions for {opt$input_file}"))
 
 glmnet_model_path <- opt$trained_model
 glmnet_model <- readRDS(glmnet_model_path)
 
-linear_dir <- opt$output_dir
+if (file.exists(opt$input_file)) {
 
-X_path <- glue("{intermediates_dir}/personalized_epigenome_predictions_mean_{ind}.txt")
-print(ind)
-if (file.exists(X_path)) {
+    X <- as.matrix(data.table::fread(opt$input_file))
+    print(dim(X))
+    
+    X_without_rownames <- X[, -1]
+    X_rownames <- X[, 1]
 
-    X <- as.matrix(data.table::fread(X_path))
+    glmnet_predictions <- as.data.frame(predict(glmnet_model, X_without_rownames, s = "lambda.min", type="response"))
+    glmnet_predictions <- cbind(X_rownames, glmnet_predictions)
+    write_delim(glmnet_predictions, opt$output_file, delim = "\t", col_names = FALSE)
 
-    glmnet_predictions <- as.data.frame(predict(glmnet_model, X, s = "lambda.min", type="response"))
-
-    write_delim(glmnet_predictions, glue("{intermediates_dir}/enpact_personalized_predictions_{ind}.txt"), delim = "\t")
 
 } else {
-    print(glue({"{ind} missing"}))
+    print(glue({"{opt$input_file} missing"}))
 }
