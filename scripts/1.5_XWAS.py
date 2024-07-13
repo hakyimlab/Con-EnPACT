@@ -27,7 +27,7 @@ intermediates_dir_train_enpact = os.path.join(project_dir, "intermediates",
 intermediates_dir_linearization = os.path.join(project_dir, "intermediates",
                         "linearization")
 intermediates_dir = os.path.join(project_dir, "intermediates",
-                        "TWAS")
+                        "XWAS")
 os.makedirs(intermediates_dir, exist_ok=True)
 
 context = parameters["general_parameters"]["context"]

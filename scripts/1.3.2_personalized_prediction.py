@@ -26,6 +26,7 @@ import sqlite3
 
 import glob
 
+import enpact_utils
 import epigenome_utils
 import logging_utils
 import enpact_prediction
@@ -269,44 +270,7 @@ regions = []
 with open(os.path.join(intermediates_dir, "interval_list.txt"), "r") as int_list:
     for line in int_list:
         regions.append(line.strip())
-
-# Define function to collect epigenome for given individual
-        
-def collect_epigenome(ind, regions, path_to_predictions, collected_preds_dir, start_bin, end_bin):
-
-    print("Collecting epigenome for individual: ",ind)
-
-    predictions_dict_haplo1 = {}
-    predictions_dict_haplo2 = {}
-
-    for i,region in enumerate(regions):
-
-        pred_file_h1 = os.path.join(path_to_predictions,ind,"haplotype1",region+"_predictions.h5")
-        pred_file_h2 = os.path.join(path_to_predictions,ind,"haplotype2",region+"_predictions.h5")
-
-        if not (os.path.exists(pred_file_h1) and os.path.exists(pred_file_h2)):
-            continue
-        
-        try:
-            with h5py.File(pred_file_h1,"r") as f:
-                pred_h1 = f[region][:]
-                pred_h1 = pred_h1[start_bin:end_bin,:]
-                predictions_dict_haplo1[region] = list(pred_h1.mean(axis=0))
-            with h5py.File(pred_file_h2,"r") as f:
-                pred_h2 = f[region][:]
-                pred_h2 = pred_h2[start_bin:end_bin,:]
-                predictions_dict_haplo2[region] = list(pred_h2.mean(axis=0))
-        except:
-            print("Error in reading file: ",ind,region)
-            continue
-
-    predictions_df = pd.DataFrame(predictions_dict_haplo1).T
-    predictions_df.to_csv(os.path.join(collected_preds_dir, ind+"_haplo1.txt"),sep="\t", header=False)
-
-    predictions_df = pd.DataFrame(predictions_dict_haplo2).T
-    predictions_df.to_csv(os.path.join(collected_preds_dir, ind+"_haplo2.txt"),sep="\t", header=False)
-
-    print("Finished collecting epigenome for individual: ",ind)
+    
 
 # Compute number of regions and individuals passable
 
@@ -337,7 +301,7 @@ num_cpus = mp.cpu_count()
 print("Using ",num_cpus," CPUs")
 
 with mp.Pool(num_cpus) as pool:
-    pool.starmap(collect_epigenome, collection_arguments_for_starmap)
+    pool.starmap(epigenome_utils.collect_epigenome, collection_arguments_for_starmap)
 
 
 #################################################################
@@ -368,11 +332,11 @@ for ind in individuals:
             print("Already exists: ",ind)
             continue
 
-    enpact_prediction.make_enpact_prediction(haplo1_epigenome, haplo1_enpact_pred, 
+    enpact_utils.make_enpact_predictions(haplo1_epigenome, haplo1_enpact_pred, 
                                             path_to_trained_model, 
                                             script_directory)
     
-    enpact_prediction.make_enpact_prediction(haplo2_epigenome, haplo2_enpact_pred,
+    enpact_utils.make_enpact_predictions(haplo2_epigenome, haplo2_enpact_pred,
                                             path_to_trained_model,
                                             script_directory)
 

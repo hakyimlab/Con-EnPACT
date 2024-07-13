@@ -2,6 +2,7 @@
     "general_parameters": {
         "project_directory": "/beagle3/haky/users/saideep/projects/Con_EnPACT/models/flu_4bin_1milscaling",
         "context": "Flu",
+        "tag":"ATAC" ,
         "color_palette": "/beagle3/haky/users/saideep/github_repos/Con-EnPACT/color_palettes/color_palette.json"
     },
     "generate_enpact_training_data": {
@@ -53,19 +54,30 @@
     },
     "linearization":{
         "path_to_predictDB_pipeline": "/beagle3/haky/users/saideep/github_repos/forked_PredictDB-nextflow/PredictDb-nextflow",
-        "epigenome_pred_dir": "/beagle3/haky/data/Geuvadis_TSS_enformer_prediction",
-        "feature_source": "gwas_sum_stats",
-        "features_path":"",
-        "individuals": "/beagle3/haky/users/saideep/github_repos/Daily-Blog-Sai/posts/2023-11-16-linearization/individuals.txt",
-        "snp_annotation": "/beagle3/haky/users/charles/project/singleXcanDL/PredicDB/T2D_all_DL_PredictDb/meta_data/all_chrs.snp_annot_v1.txt",
-        "genotype_data": "/beagle3/haky/users/charles/project/singleXcanDL/PredicDB/T2D_all_DL_PredictDb/meta_data/all_chrs.geno_v1.txt"
+        "linearization_datasets":{
+            "COVID":{
+                "features":"",
+                "individuals":"",
+                "genotype_file":"",
+                "snp_annotation_file":"",
+                "gene_annotation_file":"",
+                "epigenome_pred_dir":""
+            }
+        }
     },
     "XWAS":{
         "XWAS_method": "SPrediXcan",
         "path_to_XWAS_software": "/beagle3/haky/users/saideep/github_repos/MetaXcan/software/SPrediXcan.py",
-        "GWAS_sum_stats": {
-            "Allergy_Eczema":"/beagle3/haky/users/saideep/projects/aracena_modeling/SPrediXcan/sumstats_formatted/Asthma_eczema_farreira_FORMATTED.txt.chromb38",
-            "COVID":""
+        "XWAS_datasets": {
+            "Allergy_Eczema":{
+                "GWAS":"",
+                "linearization_dataset":"Allergy_Eczema"
+
+            },
+            "COVID":{
+                "GWAS":"",
+                "linearization_dataset":"COVID"
+            }
         }
     }
 }
