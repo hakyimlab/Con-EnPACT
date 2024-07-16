@@ -17,5 +17,5 @@ path_to_enpact_repo="/beagle3/haky/users/saideep/github_repos/Con-EnPACT"
 config_file=CONFIG_FILE
 
 # Generate training data
-python $path_to_enpact_repo/scripts/1.5_TWAS.py \
+python $path_to_enpact_repo/scripts/1.5_XWAS.py \
     $config_file

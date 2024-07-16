@@ -25,7 +25,7 @@ import h5py
 
 import pickle as pkl
 
-import enapct_utils
+import enpact_utils
 import epigenome_utils
 import logging_utils
 
@@ -75,15 +75,15 @@ linearization_datasets = linearization_parameters["linearization_datasets"]
 
 print("Making EnPACT predictions")
 
-window_size = parameters["generate_enpact_training_data"]["num_bins"]
+window_size = parameters["generate_enpact_training_data"]["reference_epigenome"]["num_bins"]
 context = parameters["general_parameters"]["context"]
 
 model_path = os.path.join(intermediates_dir_train_enpact,
                         f"trained_enpact_eln_{context}.linear.rds")
 
 for ld in linearization_datasets.keys():
-    inds_file = linearization_datasets[ld]["individuals"]
     epigenome_pred_dir = linearization_datasets[ld]["epigenome_pred_dir"]
+    inds_file = linearization_datasets[ld]["individuals"]
     with open(inds_file, "r") as inds_f:
         inds = inds_f.read().split()
 
@@ -95,13 +95,17 @@ for ld in linearization_datasets.keys():
     arguments_for_starmap = []
     output_enpact_predictions = []
     for ind in inds:
+        print(f"{ld}_{ind}")
         cur_enformer_pred = os.path.join(epigenome_pred_dir, ind+f"_{window_size}.txt")
         if not os.path.exists(cur_enformer_pred):
             print(cur_enformer_pred, " does not exist")
             continue
         cur_enpact_pred = os.path.join(cur_lin_dir, "enpact_preds", f"{ind}_{window_size}_enpact.txt")
-        arguments_for_starmap.append((cur_enformer_pred, cur_enpact_pred, model_path))
+        arguments_for_starmap.append((cur_enformer_pred, cur_enpact_pred, model_path, script_directory))
+    
+    output_enpact_predictions = pool.starmap(enpact_utils.make_enpact_predictions, arguments_for_starmap)
         
+# sys.exit()
 
 #################################################################
 # 3.) Format EnPACT predictions for PredictDB and prepare inputs
@@ -118,9 +122,18 @@ for ld in linearization_datasets.keys():
         "-d'\t'"
     ]
 
+    inds_file = linearization_datasets[ld]["individuals"]
+    with open(inds_file, "r") as inds_f:
+        inds = inds_f.read().split()
+
     inds_include = []
-    for ind in inds_pred:
+    ind_count = 0
+    for ind in inds:
+
         if os.path.exists(os.path.join(cur_lin_dir, "enpact_preds",f"{ind}_{window_size}_enpact.txt")):
+            if ind_count == 0:
+                paste_com.append(os.path.join(cur_lin_dir, "enpact_preds",f"{ind}_{window_size}_enpact.txt.rownames"))
+                ind_count += 1
             paste_com.append(os.path.join(cur_lin_dir, "enpact_preds",f"{ind}_{window_size}_enpact.txt"))
             inds_include.append(ind)
 
@@ -130,18 +143,36 @@ for ld in linearization_datasets.keys():
     paste_com.append("+2")
 
     paste_com.append(">")
-    paste_com.append(os.path.join(cur_lin_dir, "enpact_preds", f"combined_predictions.txt"))
+    paste_com.append(os.path.join(cur_lin_dir, "enpact_preds", f"combined_predictions_body.txt"))
 
-    print(" ".join(paste_com))
+    # print(" ".join(paste_com))
 
-    subprocess.run(paste_com)
+    os.system(" ".join(paste_com))
 
+    with open(os.path.join(cur_lin_dir, "enpact_preds", f"combined_predictions_header.txt"), "w") as o:
+        header = ["NAME"]
+        for ind in inds_include:
+            header.append(ind)
+
+        o.write("\t".join(header) + "\n")
+
+    os.system(f"cat {os.path.join(cur_lin_dir, 'enpact_preds', 'combined_predictions_header.txt')} {os.path.join(cur_lin_dir, 'enpact_preds', 'combined_predictions_body.txt')} > {os.path.join(cur_lin_dir, 'enpact_preds', 'combined_predictions.txt')}")
+
+    # Clean up table formatting as needed
+
+    combined_preds = pd.read_csv(os.path.join(cur_lin_dir, "enpact_preds", "combined_predictions.txt"), sep="\t")
+
+    combined_preds["NAME"] = [x.split(".")[1] for x in list(combined_preds["NAME"])]
+
+    combined_preds.to_csv(os.path.join(cur_lin_dir, "enpact_preds", "combined_predictions.txt"), sep="\t", index=False)
 
 #################################################################
 # 4.) Create PredictDB sbatch scripts
 #################################################################
 
 print("Creating PredictDB sbatch scripts")
+
+predictDB_template = os.path.join(script_directory, "run_predictDB.sbatch")
 
 for ld in linearization_datasets.keys():
 
@@ -158,11 +189,13 @@ for ld in linearization_datasets.keys():
         predictDB_script = predictDB_script.replace("PREDICTDB_REPO", linearization_parameters["path_to_predictDB_pipeline"])
         predictDB_script = predictDB_script.replace("EXPRESSION", os.path.join(cur_lin_dir, "enpact_preds", f"combined_predictions.txt"))
         predictDB_script = predictDB_script.replace("OUTPUT_DIR", predictDB_dir)
-        predictDB_script = predictDB_script.replace("GENE_ANNOTATION", )
-        predictDB_script = predictDB_script.replace("SNP_ANNOTATION", linearization_datasets[ld]["snp_annotaton_file"])
+        predictDB_script = predictDB_script.replace("GENE_ANNOTATION", linearization_datasets[ld]["gene_annotation_file"])
+        predictDB_script = predictDB_script.replace("SNP_ANNOTATION", linearization_datasets[ld]["snp_annotation_file"])
         predictDB_script = predictDB_script.replace("GENOTYPE", linearization_datasets[ld]["genotype_file"])
         predictDB_script = predictDB_script.replace("NFOLDS", "10")
 
 
         with open(os.path.join(predictDB_dir,"run_predictDB.sbatch"), "w") as rp:
             rp.write(predictDB_script)
+
+    subprocess.run(["sbatch", os.path.join(predictDB_dir,"run_predictDB.sbatch")], cwd=predictDB_dir)

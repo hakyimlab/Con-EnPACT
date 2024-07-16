@@ -70,12 +70,12 @@
         "path_to_XWAS_software": "/beagle3/haky/users/saideep/github_repos/MetaXcan/software/SPrediXcan.py",
         "XWAS_datasets": {
             "Allergy_Eczema":{
-                "GWAS":"",
+                "GWAS_sum_stats":"",
                 "linearization_dataset":"Allergy_Eczema"
 
             },
             "COVID":{
-                "GWAS":"",
+                "GWAS_sum_stats":"",
                 "linearization_dataset":"COVID"
             }
         }

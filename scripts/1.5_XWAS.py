@@ -12,7 +12,6 @@ import os,sys
 #################################################################
 
 
-
 print("Loading input variables")
 
 json_file = sys.argv[1]
@@ -32,46 +31,49 @@ os.makedirs(intermediates_dir, exist_ok=True)
 
 context = parameters["general_parameters"]["context"]
 
-twas_parameters = parameters["TWAS"]
+xwas_parameters = parameters["XWAS"]
 
 script_directory = os.path.dirname(os.path.abspath(sys.argv[0])) 
 print(script_directory)
 
 
 #################################################################
-# 1.) Build submission scripts for TWAS analsis
+# 1.) Build submission scripts for XWAS analsis
 #################################################################
 
-print("Building submission scripts for TWAS analysis")
+print("Building submission scripts for XWAS analysis")
 
-gwas_files = twas_parameters["GWAS_data"]
+xwas_datasets = xwas_parameters["XWAS_datasets"]
 
-if twas_parameters["TWAS_method"] == "SPrediXcan":
+xwas_template_path = os.path.join(script_directory, "run_SPrediXcan.sbatch")
 
-    twas_template_path = os.path.join(script_directory, "run_SPrediXcan.sbatch")
+for gwas in xwas_datasets.keys():
 
-    model_path = os.path.join(intermediates_dir_linearization,"predictDB","filtered_db","predict_db_Model_training_filtered.db")
-    cov_path = os.path.join(intermediates_dir_linearization,"predictDB","filtered_db","predict_db_Model_training_filtered.txt.gz")
+    if xwas_parameters["XWAS_method"] == "SPrediXcan":
 
-    for gwas in gwas_files.keys():
-        twas_template = open(twas_template_path, "r").read()
+        current_linearization_dataset = xwas_datasets[gwas]["linearization_dataset"]
 
-        twas_template = twas_template.replace("JOBNAME", gwas)
+        model_path = os.path.join(intermediates_dir_linearization,current_linearization_dataset,"predictDB","filtered_db","predict_db_Model_training_filtered.db")
+        cov_path = os.path.join(intermediates_dir_linearization,current_linearization_dataset,"predictDB","filtered_db","predict_db_Model_training_filtered.txt.gz")
 
-        twas_template = twas_template.replace("SPREDIXCAN_PATH", twas_parameters["path_to_TWAS_software"])
+        xwas_template = open(xwas_template_path, "r").read()
 
-        twas_template = twas_template.replace("MODEL_DB_PATH", model_path)
-        twas_template = twas_template.replace("COVARIANCE_PATH", cov_path)
+        xwas_template = xwas_template.replace("JOBNAME", gwas)
 
-        twas_template = twas_template.replace("GWAS_FILE", gwas_files[gwas])
+        xwas_template = xwas_template.replace("SPREDIXCAN_PATH", xwas_parameters["path_to_XWAS_software"])
+
+        xwas_template = xwas_template.replace("MODEL_DB_PATH", model_path)
+        xwas_template = xwas_template.replace("COVARIANCE_PATH", cov_path)
+
+        xwas_template = xwas_template.replace("GWAS_FILE", xwas_datasets[gwas]["GWAS_sum_stats"])
 
         os.makedirs(os.path.join(intermediates_dir, gwas), exist_ok=True)
-        twas_template = twas_template.replace("OUTPUT_FILE", os.path.join(intermediates_dir, gwas, gwas+".txt"))
+        xwas_template = xwas_template.replace("OUTPUT_FILE", os.path.join(intermediates_dir, gwas, gwas+".txt"))
 
         with open(os.path.join(intermediates_dir, gwas, gwas+".sbatch"), "w") as o:
-            o.write(twas_template)
+            o.write(xwas_template)
 
         subprocess.run(["sbatch", os.path.join(intermediates_dir, gwas, gwas+".sbatch")],
-                       cwd=os.path.join(intermediates_dir, gwas))
+                    cwd=os.path.join(intermediates_dir, gwas))
 
 

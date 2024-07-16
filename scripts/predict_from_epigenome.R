@@ -44,8 +44,9 @@ if (file.exists(opt$input_file)) {
     X_rownames <- X[, 1]
 
     glmnet_predictions <- as.data.frame(predict(glmnet_model, X_without_rownames, s = "lambda.min", type="response"))
-    glmnet_predictions <- cbind(X_rownames, glmnet_predictions)
     write_delim(glmnet_predictions, opt$output_file, delim = "\t", col_names = FALSE)
+    glmnet_predictions <- cbind(X_rownames, glmnet_predictions)
+    write_delim(as.data.frame(X_rownames), paste0(opt$output_file, ".rownames"), delim = "\t", col_names = FALSE)
 
 
 } else {

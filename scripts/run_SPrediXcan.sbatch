@@ -6,9 +6,9 @@
 #SBATCH --cpus-per-task=26
 #SBATCH --time=06:00:00
 #SBATCH --mem=52GB
-    
-module load python
-conda activate imlabtools
+
+module unload python
+conda activate /beagle3/haky/users/saideep/envs/enformer
 
 SPREDIXCAN_PATH \
 --model_db_path MODEL_DB_PATH \
